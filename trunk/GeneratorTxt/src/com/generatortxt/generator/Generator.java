@@ -13,8 +13,11 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -33,27 +36,14 @@ public class Generator {
     }
 
     public String toTxt() throws IllegalArgumentException, IllegalAccessException, MaxLengthException, ExactLengthException, ClassNotFoundException, NoSuchMethodException, InstantiationException, InvocationTargetException {
-        Class clazz = sped.getClass();
-        Field fields[] = clazz.getDeclaredFields();
-        gerarTxt(fields, sped, clazz);
+        Class txtClass = sped.getClass();
+        Field fields[] = txtClass.getDeclaredFields();
+        gerarTxt(fields, sped, txtClass);
         return spedString.toString();
     }
 
-    private void gerarTxt(Field[] fields, Object obj, Class clazz) throws IllegalArgumentException, IllegalAccessException, ExactLengthException, MaxLengthException, ClassNotFoundException, NoSuchMethodException, InstantiationException, InvocationTargetException {
-        for (int i = 0; i < fields.length; i++) {
-            Field field = fields[i];
-            field.setAccessible(true);
-
-            if (field.get(obj) == null) {
-
-                Class c = Class.forName(field.getType().getName());
-                Constructor ct = c.getConstructor();
-                Object o = ct.newInstance(null);
-                Field f[] = c.getDeclaredFields();
-
-                gerarTxt(f, o, c);
-            }
-            Annotation[] annotations = field.getDeclaredAnnotations();
+    public void generateAnottations(Field field, Object obj) throws IllegalArgumentException, IllegalAccessException, ExactLengthException, MaxLengthException{
+        Annotation[] annotations = field.getDeclaredAnnotations();
             if (annotations != null && annotations.length > 0) {
                 for (int j = 0; j < annotations.length; j++) {
                     Annotation annotation = annotations[j];
@@ -109,6 +99,38 @@ public class Generator {
                     spedString.append(content);
                 }
             }
+    }
+
+    private void gerarTxt(Field[] fields, Object obj, Class ownerClass) throws IllegalArgumentException, IllegalAccessException, ExactLengthException, MaxLengthException, ClassNotFoundException, NoSuchMethodException, InstantiationException, InvocationTargetException {
+        for (int i = 0; i < fields.length; i++) {
+            Field field = fields[i];
+            field.setAccessible(true);
+
+            if (field.get(obj) == null) {
+
+                Class c = Class.forName(field.getType().getName());
+                if(c.isAssignableFrom(List.class)){
+                    List list = (List)field.get(obj);
+                    if(list != null){
+                        for(int j = 0; j < list.size(); j++){
+                            Class listFieldClass = list.get(j).getClass();
+                            gerarTxt(listFieldClass.getDeclaredFields(), list.get(j), listFieldClass);
+                            //Deve testar cada objeto que está na lista.
+                            generateAnottations(field, obj);
+                        }
+                    }
+                }else if(c.isAssignableFrom(Set.class)){
+                    
+                }else{
+                    Constructor ct = c.getConstructor();
+                    Object o = ct.newInstance(obj);
+                    Field f[] = c.getDeclaredFields();
+                    gerarTxt(f, o, c);
+                }
+                
+            }
+
+            generateAnottations(field, obj);
         }
     }
 
@@ -121,7 +143,7 @@ public class Generator {
 
     private Object space(Object content, int max) {
         for (int i = content.toString().length(); i < max; i++) {
-            content += " ";
+            content = " "+content;
         }
         return content;
     }
