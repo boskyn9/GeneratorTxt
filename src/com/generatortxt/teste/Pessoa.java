@@ -8,6 +8,7 @@ package com.generatortxt.teste;
 import com.generatortxt.annotation.DateFormat;
 import com.generatortxt.annotation.MaxLength;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -24,7 +25,7 @@ public class Pessoa {
     @DateFormat(format="dd-MM-yyyy")
     private Date nasc = new Date();
 
-    private Carro carro;
+    private List<Carro> carros;
 
     public Float getAltura() {
         return altura;
@@ -34,12 +35,12 @@ public class Pessoa {
         this.altura = altura;
     }
 
-    public Carro getCarro() {
-        return carro;
+    public List<Carro> getCarros() {
+        return carros;
     }
 
-    public void setCarro(Carro carro) {
-        this.carro = carro;
+    public void setCarros(List<Carro> carros) {
+        this.carros = carros;
     }
 
     public Integer getIdade() {

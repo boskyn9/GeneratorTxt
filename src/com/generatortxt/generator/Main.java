@@ -5,7 +5,9 @@
 
 package com.generatortxt.generator;
 
+import com.generatortxt.teste.Carro;
 import com.generatortxt.teste.Pessoa;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,6 +64,11 @@ public class Main {
             //            }
             //        }
             Pessoa p = new Pessoa();
+            p.setCarros(new ArrayList<Carro>());
+            Carro c1 = new Carro();
+            Carro c2 = new Carro();
+            p.getCarros().add(c1);
+            p.getCarros().add(c2);
             Generator g = new Generator(p);
             System.out.println(g.toTxt());
 
