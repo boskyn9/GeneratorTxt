@@ -8,6 +8,7 @@ package com.generatortxt.generator;
 import com.generatortxt.generator.types.DefaultType;
 import com.generatortxt.teste.Carro;
 import com.generatortxt.teste.Pessoa;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -76,9 +77,16 @@ public class Main {
             Carro c1 = new Carro();
             c1.setMarca("MARCA1");
             c1.setModelo("MODELO1");
+            Pessoa montador = new Pessoa();
+            montador.setNome("MONTADOR1");
+            c1.setMontador(montador);
+
             Carro c2 = new Carro();
             c2.setMarca("MARCA2");
             c2.setModelo("MODELO2");
+            Pessoa montador2 = new Pessoa();
+            montador.setNome("MONTADOR2");
+            c2.setMontador(montador2);
             p.getCarros().add(c1);
             p.getCarros().add(c2);
 
@@ -99,7 +107,12 @@ public class Main {
             Generator g = new Generator(new DefaultType("0", " "));
             //Generator g = new Generator(); padrão "0" - " "
             //Generator g = new Generator(new DelimitationType("|"));
-            System.out.println(g.toTxt(p));
+            String saida = g.toTxt(p);
+            System.out.println(saida);
+
+            FileWriter writer = new FileWriter(System.getProperty("user.home")+"/Desktop/teste.txt");
+            writer.write(saida);
+            writer.close();
 
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
