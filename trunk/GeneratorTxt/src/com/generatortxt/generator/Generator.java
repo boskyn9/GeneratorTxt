@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.generatortxt.generator;
 
 import com.generatortxt.annotation.DateFormat;
@@ -13,7 +9,6 @@ import com.generatortxt.generator.types.DefaultType;
 import com.generatortxt.generator.types.DelimitationType;
 import com.generatortxt.generator.types.TypeGenerator;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -147,14 +142,17 @@ public class Generator {
                     List list = (List) field.get(obj);
                     if (list != null) {
                         for (int j = 0; j < list.size(); j++) {
-                            Class listFieldClass = list.get(j).getClass();
+//                            Class listFieldClass = list.get(j).getClass();
+//
+//                            Constructor ct = listFieldClass.getConstructor();
+//                            Object o = ct.newInstance();
+//                            Field f[] = listFieldClass.getDeclaredFields();
+//
+//                            gerarTxt(f, o, listFieldClass);
 
-                            Constructor ct = listFieldClass.getConstructor();
-                            Object o = ct.newInstance();
-                            Field f[] = listFieldClass.getDeclaredFields();
-
-                            gerarTxt(f, o, listFieldClass);
-
+                            Object o = list.get(j);
+                            Class listFieldClass = o.getClass();
+                            gerarTxt(listFieldClass.getDeclaredFields(), o, listFieldClass);
                         }
                     }
                 } else if (c.isAssignableFrom(Set.class)) {
@@ -164,11 +162,12 @@ public class Generator {
                             Object object = it.next();
                             Class setFieldClass = object.getClass();
 
-                            Constructor ct = setFieldClass.getConstructor();
-                            Object o = ct.newInstance();
-                            Field f[] = setFieldClass.getDeclaredFields();
+//                            Constructor ct = setFieldClass.getConstructor();
+//                            Object o = ct.newInstance();
+//                            Field f[] = setFieldClass.getDeclaredFields();
 
-                            gerarTxt(f, o, setFieldClass);
+                            //gerarTxt(f, o, setFieldClass);
+                            gerarTxt(setFieldClass.getDeclaredFields(), object, setFieldClass);
                         }
                     }
                 } else {

@@ -14,9 +14,9 @@ import com.generatortxt.annotation.MaxLength;
 public class Carro {
 
     @MaxLength(type='s', value=10)
-    private String marca = "Chev";
+    private String marca;// = "Chev";
     @MaxLength(type='s', value=20)
-    private String modelo = "astra";
+    private String modelo;// = "astra";
 
     public String getMarca() {
         return marca;
