@@ -5,13 +5,17 @@
 
 package com.generatortxt.teste;
 
+import com.generatortxt.annotation.MaxLength;
+
 /**
  *
  * @author boskyn9
  */
 public class Carro {
 
+    @MaxLength(type='s', value=10)
     private String marca = "Chev";
+    @MaxLength(type='s', value=20)
     private String modelo = "astra";
 
     public String getMarca() {

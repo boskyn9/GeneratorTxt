@@ -16,6 +16,7 @@ import java.util.List;
  */
 public class Pessoa {
 
+    
     @MaxLength(value=5, type='z')
     private Integer idade = 10;    
     private Float altura = 1.78f;
