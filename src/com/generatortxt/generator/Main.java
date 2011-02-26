@@ -5,6 +5,8 @@
 
 package com.generatortxt.generator;
 
+import com.generatortxt.generator.types.DefaultType;
+import com.generatortxt.generator.types.DelimitationType;
 import com.generatortxt.teste.Carro;
 import com.generatortxt.teste.Pessoa;
 import java.util.ArrayList;
@@ -77,8 +79,10 @@ public class Main {
             p.getIrmaos().add(new Pessoa());
             p.getIrmaos().add(new Pessoa());
 
-            Generator g = new Generator(p);
-            System.out.println(g.toTxt());
+            //Generator g = new Generator(new DefaultType("0", " "));
+            //Generator g = new Generator(); padrão "0" - " "
+            Generator g = new Generator(new DelimitationType("|"));
+            System.out.println(g.toTxt(p));
 
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
