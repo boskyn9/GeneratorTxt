@@ -8,12 +8,15 @@ package com.generatortxt.generator;
 import com.generatortxt.generator.types.DefaultType;
 import com.generatortxt.teste.Carro;
 import com.generatortxt.teste.Pessoa;
+import com.generatortxt.util.NoNavegable;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+
 
 /**
  *
@@ -103,16 +106,16 @@ public class Main {
             p3.setNasc(new Date());
             p3.setAltura(8.77f);
             p.getIrmaos().add(p3);
-
-            Generator g = new Generator(new DefaultType("0", " "));
-            //Generator g = new Generator(); padrão "0" - " "
-            //Generator g = new Generator(new DelimitationType("|"));
-            String saida = g.toTxt(p);
-            System.out.println(saida);
-
-            FileWriter writer = new FileWriter(System.getProperty("user.home")+"/Desktop/teste.txt");
-            writer.write(saida);
-            writer.close();
+            //          Generator g = new Generator(new DefaultType("0", " "));
+                        Generator g = new Generator();// padrão "0" - " "
+                        //Generator g = new Generator(new DelimitationType("|"));
+                        String saida = g.toTxt(p);
+                        System.out.println(saida);
+            
+                        FileWriter writer = new FileWriter(System.getProperty("user.home")+"/Desktop/teste.txt");
+                        writer.write(saida);
+                        writer.close();
+           
 
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);

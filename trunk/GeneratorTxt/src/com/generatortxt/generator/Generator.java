@@ -8,6 +8,7 @@ import com.generatortxt.exception.MaxLengthException;
 import com.generatortxt.generator.types.DefaultType;
 import com.generatortxt.generator.types.DelimitationType;
 import com.generatortxt.generator.types.TypeGenerator;
+import com.generatortxt.util.NoNavegable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -74,7 +75,10 @@ public class Generator {
                     ExactLength ann = (ExactLength) annotation;
                     int length = ann.value();
                     Object content = field.get(obj);
-                    if (content.toString().length() != length) {
+                    int tamanho = 0;
+                    if(content!=null)
+                        tamanho = content.toString().length();
+                    if (tamanho != length) {
                         String message = String.format("O valor do campo %s é diferente do definido.", field.getName());
                         String cause = String.format("O valor do campo %s é %s e deveria ser menor ou igual a %s", field.getName(), content, length);
                         throw new ExactLengthException(message, cause);
@@ -92,7 +96,10 @@ public class Generator {
                     MaxLength ann = (MaxLength) annotation;
                     int max = ann.value();
                     Object content = field.get(obj);
-                    if (content.toString().length() > max) {
+                    int tamanho = 0;
+                    if(content!=null)
+                        tamanho = content.toString().length();
+                    if (tamanho > max) {
                         String message = String.format("O valor do campo %s é maior que o máximo definido.", field.getName());
                         String cause = String.format("O valor do campo %s é %s e deveria ser menor ou igual a %s", field.getName(), content, max);
                         throw new MaxLengthException(message, cause);
@@ -134,7 +141,7 @@ public class Generator {
             Field field = fields[i];
             field.setAccessible(true);
 
-            if (field.get(obj) == null || isList(field)) {
+            if (isList(field) || isNavegable(field.getType())) {
 
                 Class c = Class.forName(field.getType().getName());
 
@@ -171,10 +178,8 @@ public class Generator {
                         }
                     }
                 } else {
-                    Constructor ct = c.getConstructor();
-                    Object o = ct.newInstance(obj);
                     Field f[] = c.getDeclaredFields();
-                    gerarTxt(f, o, c);
+                    gerarTxt(f, field.get(obj), c);
                 }
 
             } else {
@@ -203,5 +208,16 @@ public class Generator {
             return true;
         }
         return false;
+    }
+
+    private boolean isNavegable(Class clazz){
+         NoNavegable[] no = NoNavegable.values();
+            for (int i = 0; i < no.length; i++) {
+                String noNavegable = no[i].toString();
+                if(clazz.getName().equals(noNavegable) || clazz.getPackage().getName().equals(noNavegable)){
+                    return false;
+                }
+            }
+         return true;
     }
 }
