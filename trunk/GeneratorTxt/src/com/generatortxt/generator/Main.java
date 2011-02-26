@@ -8,6 +8,7 @@ package com.generatortxt.generator;
 import com.generatortxt.teste.Carro;
 import com.generatortxt.teste.Pessoa;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -70,6 +71,12 @@ public class Main {
             Carro c2 = new Carro();
             p.getCarros().add(c1);
             p.getCarros().add(c2);
+            p.setIrmaos(new HashSet<Pessoa>());
+
+            p.getIrmaos().add(new Pessoa());
+            p.getIrmaos().add(new Pessoa());
+            p.getIrmaos().add(new Pessoa());
+
             Generator g = new Generator(p);
             System.out.println(g.toTxt());
 

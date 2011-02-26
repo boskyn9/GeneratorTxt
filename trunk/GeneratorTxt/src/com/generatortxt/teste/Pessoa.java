@@ -9,6 +9,7 @@ import com.generatortxt.annotation.DateFormat;
 import com.generatortxt.annotation.MaxLength;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -27,6 +28,8 @@ public class Pessoa {
     private Date nasc = new Date();
 
     private List<Carro> carros;
+
+    private Set<Pessoa> irmaos;
 
     public Float getAltura() {
         return altura;
@@ -58,6 +61,22 @@ public class Pessoa {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public Set<Pessoa> getIrmaos() {
+        return irmaos;
+    }
+
+    public void setIrmaos(Set<Pessoa> irmaos) {
+        this.irmaos = irmaos;
+    }
+
+    public Date getNasc() {
+        return nasc;
+    }
+
+    public void setNasc(Date nasc) {
+        this.nasc = nasc;
     }
 
 }

@@ -10,12 +10,13 @@ import com.generatortxt.annotation.MaxLength;
 import com.generatortxt.exception.ExactLengthException;
 import com.generatortxt.exception.MaxLengthException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -102,6 +103,7 @@ public class Generator {
     }
 
     private void gerarTxt(Field[] fields, Object obj, Class ownerClass) throws IllegalArgumentException, IllegalAccessException, ExactLengthException, MaxLengthException, ClassNotFoundException, NoSuchMethodException, InstantiationException, InvocationTargetException {
+
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
             field.setAccessible(true);
@@ -109,6 +111,7 @@ public class Generator {
             if (field.get(obj) == null || isList(field)) {
 
                 Class c = Class.forName(field.getType().getName());
+
                 if (c.isAssignableFrom(List.class)) {
                     List list = (List) field.get(obj);
                     if (list != null) {
@@ -124,6 +127,19 @@ public class Generator {
                         }
                     }
                 } else if (c.isAssignableFrom(Set.class)) {
+                    Set set = (Set) field.get(obj);
+                    if (set != null) {
+                        for (Iterator it = set.iterator(); it.hasNext();) {
+                            Object object = it.next();
+                            Class setFieldClass = object.getClass();
+
+                            Constructor ct = setFieldClass.getConstructor();
+                            Object o = ct.newInstance();
+                            Field f[] = setFieldClass.getDeclaredFields();
+
+                            gerarTxt(f, o, setFieldClass);
+                        }
+                    }
                 } else {
                     Constructor ct = c.getConstructor();
                     Object o = ct.newInstance(obj);
