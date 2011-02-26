@@ -9,6 +9,9 @@ import com.generatortxt.annotation.ExactLength;
 import com.generatortxt.annotation.MaxLength;
 import com.generatortxt.exception.ExactLengthException;
 import com.generatortxt.exception.MaxLengthException;
+import com.generatortxt.generator.types.DefaultType;
+import com.generatortxt.generator.types.DelimitationType;
+import com.generatortxt.generator.types.TypeGenerator;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
@@ -28,22 +31,33 @@ public class Generator {
 
     private Object sped;
     private StringBuilder spedString = new StringBuilder("");
+    private TypeGenerator type;
+
+    public String l,r;
 
     public Generator() {
+        type = new DefaultType();
+        l = ((DefaultType)type).getLeftSide();
+        r = ((DefaultType)type).getRightSide();
     }
 
-    public Generator(Object sped) {
+    public Generator(TypeGenerator type) {
+        this.type = type;
+        if(!type.hasDelimitator()){
+            l = ((DefaultType)type).getLeftSide();
+            r = ((DefaultType)type).getRightSide();
+        }
+    }
+
+    public String toTxt(Object sped) throws IllegalArgumentException, IllegalAccessException, MaxLengthException, ExactLengthException, ClassNotFoundException, NoSuchMethodException, InstantiationException, InvocationTargetException {
         this.sped = sped;
-    }
-
-    public String toTxt() throws IllegalArgumentException, IllegalAccessException, MaxLengthException, ExactLengthException, ClassNotFoundException, NoSuchMethodException, InstantiationException, InvocationTargetException {
         Class txtClass = sped.getClass();
         Field fields[] = txtClass.getDeclaredFields();
         gerarTxt(fields, sped, txtClass);
         return spedString.toString();
     }
 
-    public void generateAnottations(Field field, Object obj) throws IllegalArgumentException, IllegalAccessException, ExactLengthException, MaxLengthException {
+    public void generateAnottations(Field field, Object obj, int i) throws IllegalArgumentException, IllegalAccessException, ExactLengthException, MaxLengthException {
         Annotation[] annotations = field.getDeclaredAnnotations();
         if (annotations != null && annotations.length > 0) {
             for (int j = 0; j < annotations.length; j++) {
@@ -54,6 +68,10 @@ public class Generator {
                     String format = ann.format();
                     Date content = (Date) field.get(obj);
                     if (content != null) {
+                        if (type.hasDelimitator()) {
+                            if(i > 0)
+                            spedString.append(((DelimitationType) type).getDelimiter());
+                        }
                         spedString.append(new SimpleDateFormat(format).format(content));
                     }
 
@@ -67,6 +85,10 @@ public class Generator {
                         throw new ExactLengthException(message, cause);
                     } else {
                         if (content != null) {
+                            if (type.hasDelimitator()) {
+                                if(i > 0)
+                                spedString.append(((DelimitationType) type).getDelimiter());
+                            }
                             spedString.append(content);
                         }
                     }
@@ -81,13 +103,18 @@ public class Generator {
                         throw new MaxLengthException(message, cause);
                     } else {
                         if (content != null) {
-                            switch (ann.type()) {
-                                case 'z':
-                                    content = zero(content, max);
-                                    break;
-                                case 's':
-                                    content = space(content, max);
-                                    break;
+                            if (type.hasDelimitator()) {
+                                if(i > 0)
+                                spedString.append(((DelimitationType) type).getDelimiter());
+                            } else {
+                                switch (ann.type()) {
+                                    case 'z':
+                                        content = zero(content, max);
+                                        break;
+                                    case 's':
+                                        content = space(content, max);
+                                        break;
+                                }
                             }
                             spedString.append(content);
                         }
@@ -97,6 +124,10 @@ public class Generator {
         } else {
             Object content = field.get(obj);
             if (content != null) {
+                if (type.hasDelimitator()) {
+                    if(i > 0)
+                    spedString.append(((DelimitationType) type).getDelimiter());
+                }
                 spedString.append(content);
             }
         }
@@ -148,7 +179,7 @@ public class Generator {
                 }
 
             } else {
-                generateAnottations(field, obj);
+                generateAnottations(field, obj, i);
             }
 
         }
@@ -156,14 +187,14 @@ public class Generator {
 
     private Object zero(Object content, int max) {
         for (int i = content.toString().length(); i < max; i++) {
-            content = "0" + content;
+            content = l + content;
         }
         return content;
     }
 
     private Object space(Object content, int max) {
         for (int i = content.toString().length(); i < max; i++) {
-            content = content + " ";
+            content = content + r;
         }
         return content;
     }
