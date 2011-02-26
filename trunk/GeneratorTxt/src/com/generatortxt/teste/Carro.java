@@ -18,6 +18,16 @@ public class Carro {
     @MaxLength(type='s', value=20)
     private String modelo;// = "astra";
 
+    private Pessoa montador;
+
+    public Pessoa getMontador() {
+        return montador;
+    }
+
+    public void setMontador(Pessoa montador) {
+        this.montador = montador;
+    }
+
     public String getMarca() {
         return marca;
     }
