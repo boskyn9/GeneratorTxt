@@ -49,7 +49,7 @@ public class Generator {
         this.sped = sped;
         Class txtClass = sped.getClass();
         Field fields[] = txtClass.getDeclaredFields();
-        gerarTxt(fields, sped, txtClass);
+        gerarTxt(fields, sped);
         return spedString.toString();
     }
 
@@ -103,8 +103,7 @@ public class Generator {
                         String message = String.format("O valor do campo %s é maior que o máximo definido.", field.getName());
                         String cause = String.format("O valor do campo %s é %s e deveria ser menor ou igual a %s", field.getName(), content, max);
                         throw new MaxLengthException(message, cause);
-                    } else {
-                        if (content != null) {
+                    } else {                       
                             if (type.hasDelimitator()) {
                                 if(i > 0)
                                 spedString.append(((DelimitationType) type).getDelimiter());
@@ -119,7 +118,7 @@ public class Generator {
                                 }
                             }
                             spedString.append(content);
-                        }
+                        
                     }
                 }
             }
@@ -135,8 +134,8 @@ public class Generator {
         }
     }
 
-    private void gerarTxt(Field[] fields, Object obj, Class ownerClass) throws IllegalArgumentException, IllegalAccessException, ExactLengthException, MaxLengthException, ClassNotFoundException, NoSuchMethodException, InstantiationException, InvocationTargetException {
-
+    private void gerarTxt(Field[] fields, Object obj) throws IllegalArgumentException, IllegalAccessException, ExactLengthException, MaxLengthException, ClassNotFoundException, NoSuchMethodException, InstantiationException, InvocationTargetException {
+        spedString.append("\n");
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
             field.setAccessible(true);
@@ -149,17 +148,9 @@ public class Generator {
                     List list = (List) field.get(obj);
                     if (list != null) {
                         for (int j = 0; j < list.size(); j++) {
-//                            Class listFieldClass = list.get(j).getClass();
-//
-//                            Constructor ct = listFieldClass.getConstructor();
-//                            Object o = ct.newInstance();
-//                            Field f[] = listFieldClass.getDeclaredFields();
-//
-//                            gerarTxt(f, o, listFieldClass);
-
                             Object o = list.get(j);
                             Class listFieldClass = o.getClass();
-                            gerarTxt(listFieldClass.getDeclaredFields(), o, listFieldClass);
+                            gerarTxt(listFieldClass.getDeclaredFields(), o);
                         }
                     }
                 } else if (c.isAssignableFrom(Set.class)) {
@@ -168,18 +159,12 @@ public class Generator {
                         for (Iterator it = set.iterator(); it.hasNext();) {
                             Object object = it.next();
                             Class setFieldClass = object.getClass();
-
-//                            Constructor ct = setFieldClass.getConstructor();
-//                            Object o = ct.newInstance();
-//                            Field f[] = setFieldClass.getDeclaredFields();
-
-                            //gerarTxt(f, o, setFieldClass);
-                            gerarTxt(setFieldClass.getDeclaredFields(), object, setFieldClass);
+                            gerarTxt(setFieldClass.getDeclaredFields(), object);
                         }
                     }
                 } else {
                     Field f[] = c.getDeclaredFields();
-                    gerarTxt(f, field.get(obj), c);
+                    gerarTxt(f, field.get(obj));
                 }
 
             } else {
@@ -190,6 +175,8 @@ public class Generator {
     }
 
     private Object zero(Object content, int max) {
+        if(content==null)
+            content = l;
         for (int i = content.toString().length(); i < max; i++) {
             content = l + content;
         }
@@ -197,6 +184,8 @@ public class Generator {
     }
 
     private Object space(Object content, int max) {
+        if(content==null)
+            content = r;
         for (int i = content.toString().length(); i < max; i++) {
             content = content + r;
         }

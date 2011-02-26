@@ -76,20 +76,23 @@ public class Main {
             p.setIdade(55);
             p.setNasc(new Date());
             p.setAltura(3.22f);
+            
             p.setCarros(new ArrayList<Carro>());
+
             Carro c1 = new Carro();
             c1.setMarca("MARCA1");
-            c1.setModelo("MODELO1");
-            Pessoa montador = new Pessoa();
-            montador.setNome("MONTADOR1");
-            c1.setMontador(montador);
+            c1.setModelo("MODELO1");            
+            Pessoa montador1 = new Pessoa();
+            montador1.setNome("MONTADOR1");
+//            c1.setMontador(montador1);
 
             Carro c2 = new Carro();
             c2.setMarca("MARCA2");
             c2.setModelo("MODELO2");
             Pessoa montador2 = new Pessoa();
-            montador.setNome("MONTADOR2");
-            c2.setMontador(montador2);
+            montador2.setNome("MONTADOR2");
+//            c2.setMontador(montador2);
+
             p.getCarros().add(c1);
             p.getCarros().add(c2);
 
