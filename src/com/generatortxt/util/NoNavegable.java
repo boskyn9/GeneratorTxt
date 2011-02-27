@@ -42,6 +42,13 @@ public enum NoNavegable {
             return Double.class.getName();
         }
     },
+    DATE{
+
+        @Override
+        public String toString() {
+            return Date.class.getName();
+        }
+    },
     BIGDECIMAL {
 
         @Override
@@ -69,14 +76,6 @@ public enum NoNavegable {
         @Override
         public String toString() {
             return Character.class.getName();
-        }
-    },
-
-    DATE{
-
-        @Override
-        public String toString() {
-            return Date.class.getName();
         }
     },
 

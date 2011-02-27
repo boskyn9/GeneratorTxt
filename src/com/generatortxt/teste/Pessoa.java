@@ -6,6 +6,7 @@
 package com.generatortxt.teste;
 
 import com.generatortxt.annotation.DateFormat;
+import com.generatortxt.annotation.RealFormat;
 import com.generatortxt.annotation.MaxLength;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +21,16 @@ public class Pessoa {
     
     @MaxLength(value=5, type='z')
     private Integer idade;// = 10;
-    private Float altura;// = 1.78f;
+    /**
+     * '#' caso nao haja numeros do tamanho da mascara nao faz nada
+     * '0' caso nao haja numeros do tamanho da mascara completa com zeros
+     * a qtd de # e 0 corresponde ao tamanho maximo desejado
+     * para que se possa completar com zeros
+     * ',' definir na parte inteira qual o agrupamento ex: #,# o numero 12345 ficaria 1.2.3.4.5
+     * '.' definir na parte fracionaria
+     */
+    @RealFormat(format="#,#.0")
+    private Float altura = 12345f;
     @MaxLength(value=20, type='s')
     private String nome;// = "Bosco";
 
