@@ -15,6 +15,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -26,15 +27,29 @@ import java.util.Set;
  */
 public class Generator {
 
+    public static char CR = (char) 0x0D;
+    public static char LF = (char) 0x0A;
+    public static char EOF = (char) 0x1A;
+    
     private Object sped;
     private StringBuilder spedString = new StringBuilder("");
     private TypeGenerator type;
     public String l, r;
+    public List<Character> quebraLinha;
+    public char fimArquivo = ' ';
 
     public Generator() {
         type = new DefaultType();
         l = ((DefaultType) type).getLeftSide();
         r = ((DefaultType) type).getRightSide();
+    }
+    
+    public Generator(char fimArquivo, Character... quebraLinha) {
+        type = new DefaultType();
+        l = ((DefaultType) type).getLeftSide();
+        r = ((DefaultType) type).getRightSide();
+        this.quebraLinha = Arrays.asList(quebraLinha);
+        this.fimArquivo = fimArquivo;
     }
 
     public Generator(TypeGenerator type) {
@@ -52,7 +67,7 @@ public class Generator {
         Class txtClass = sped.getClass();
         Field fields[] = txtClass.getDeclaredFields();
         gerarTxt(fields, sped);
-        return spedString.toString();
+        return spedString.toString() + fimArquivo;
     }
 
     public void generateAnottations(Field field, Object obj, int i) throws IllegalArgumentException,
@@ -172,7 +187,7 @@ public class Generator {
     }
 
     private void gerarTxt(Field[] fields, Object obj) throws IllegalArgumentException, IllegalAccessException, ExactLengthException, MaxLengthException, ClassNotFoundException, NoSuchMethodException, InstantiationException, InvocationTargetException {
-        spedString.append("\n");
+        boolean ql = false;               
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
             field.setAccessible(true);
@@ -203,12 +218,22 @@ public class Generator {
                     Field f[] = c.getDeclaredFields();
                     gerarTxt(f, field.get(obj));
                 }
-
             } else {
                 generateAnottations(field, obj, i);
+                ql = true;
             }
-
         }
+        
+        if(ql){
+            if(quebraLinha !=null && quebraLinha.size() > 0){
+                for (Character character : quebraLinha) {
+                    spedString.append(character);
+                }
+            }else{
+                spedString.append("\n");
+            }
+        }
+            
     }
 
     private Object zero(Object content, int max) {

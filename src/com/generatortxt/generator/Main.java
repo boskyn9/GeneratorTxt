@@ -124,6 +124,7 @@ public class Main {
             if (true) {
                 return;
             }
+            
             Pessoa p = new Pessoa();
             p.setNome("PESSOA");
             p.setIdade(55);
@@ -146,7 +147,7 @@ public class Main {
             //          Generator g = new Generator(new DefaultType("0", " "));
             Generator g = new Generator();// padrão "0" - " "
             //Generator g = new Generator(new DelimitationType("|"));
-            String saida = g.toTxt(p);
+            String saida = g.toTxt(p);            
             System.out.println(saida);
 
 //            FileWriter writer = new FileWriter(System.getProperty("user.home") + "/Desktop/teste.txt");
