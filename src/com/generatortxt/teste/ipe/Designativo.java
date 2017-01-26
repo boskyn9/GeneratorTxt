@@ -4,6 +4,8 @@ import com.generatortxt.annotation.MaxLength;
 import com.generatortxt.annotation.RealFormat;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by bosco on 12/01/2017.
@@ -29,7 +31,9 @@ public class Designativo {
     @MaxLength(value = 5, type = 'z')
     private Integer numeroSeqNota;
     @MaxLength(value = 28, type = 's')
-    private String filler = "";
+    private String filler = " ";
+
+    private List<Lancamento> lancamento = new ArrayList<Lancamento>();
 
     public Integer getZeros() {
         return zeros;
@@ -109,5 +113,13 @@ public class Designativo {
 
     public void setFiller(String filler) {
         this.filler = filler;
+    }
+
+    public List<Lancamento> getLancamento() {
+        return lancamento;
+    }
+
+    public void setLancamento(List<Lancamento> lancamento) {
+        this.lancamento = lancamento;
     }
 }

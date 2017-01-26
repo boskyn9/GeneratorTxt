@@ -28,19 +28,14 @@ public class MainIPE {
             
             IpeRegistro ipe = new IpeRegistro();
             
-            Header header = new Header();
-            header.setCpfCnpjPrestador(1353121321l);
-            header.setNomeDoSitema("SMH");
+            HeaderIpe35 header = new HeaderIpe35();
+            header.setCpfCnpjPrestador(1353121321l);            
             header.setNumeroPrestador(9999);
             header.setNomePrestador("Willian Lucena");
             header.setQtdNotas(4);
             header.setQtdLancamentosReferencia(5);
             header.setFiller("");            
             ipe.setHeader(header);
-            
-            
-            
-            Nota nota = new Nota();
             
             int i = 0;
             
@@ -56,27 +51,30 @@ public class MainIPE {
                 designativo.setValorTotalMedicamentoMaterial(new BigDecimal("859.50"));
                 designativo.setValorTotalNota(new BigDecimal("9999.55"));            
                 designativo.setFiller("");
-                nota.setDesignativo(designativo);
+                int j = 0;
 
-                //-----------------------------------------------------------------
-
-                Lancamento lancamento = new Lancamento();
-                lancamento.setRefencia(10);
-                lancamento.setQuantidadeServico(10);
-                lancamento.setNumeroContratoSolicitante(456789);
-                lancamento.setNomeBeneficiario("João Bosco");
-                lancamento.setMatricula(453456);
-                lancamento.setDia(10);
-                lancamento.setCodigoHonorario(1123);
-                lancamento.setArquivoPDF("arquivoPDF");
-                nota.setLancamento(lancamento);
-
-
-                ipe.getNotas().add(nota);                
+                while (j < 20){
+                    Lancamento lancamento = new Lancamento();
+                    lancamento.setRefencia(10);
+                    lancamento.setQuantidadeServico(10);
+                    lancamento.setNumeroContratoSolicitante(456789);
+                    lancamento.setNomeBeneficiario("João Bosco");
+                    lancamento.setMatricula(45345645646l);
+                    lancamento.setDia(10);
+                    lancamento.setCodigoHonorario(1123);
+                    lancamento.setArquivoPDF("arquivoPDF");
+                    
+                    designativo.getLancamento().add(lancamento);
+                    
+                    j++;
+                }
+                
+                ipe.getDesignativo().add(designativo);
+                
                 i++;
             }
             
-            Generator g = new Generator(Generator.EOF, Generator.CR, Generator.LF);
+            Generator g = new Generator(null, Generator.CR, Generator.LF);
             
             String saida = g.toTxt(ipe);
             System.out.println(saida);

@@ -5,8 +5,8 @@ import java.util.List;
 
 public class IpeRegistro {
 
-    private Header header;
-    private List<Nota> notas = new ArrayList<Nota>();
+    private HeaderIpe35 header;
+    private List<Designativo> designativo = new ArrayList<Designativo>();
 
     /**
      * "SMH" + <código do prestador com 5 dígitos> + "." + <extensão>
@@ -22,19 +22,19 @@ public class IpeRegistro {
         return "";
     }
 
-    public Header getHeader() {
+    public HeaderIpe35 getHeader() {
         return header;
     }
 
-    public void setHeader(Header header) {
+    public void setHeader(HeaderIpe35 header) {
         this.header = header;
     }
 
-    public List<Nota> getNotas() {
-        return notas;
+    public List<Designativo> getDesignativo() {
+        return designativo;
     }
 
-    public void setNotas(List<Nota> notas) {
-        this.notas = notas;
+    public void setDesignativo(List<Designativo> designativo) {
+        this.designativo = designativo;
     }
 }

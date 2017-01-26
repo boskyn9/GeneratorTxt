@@ -10,7 +10,7 @@ public class Lancamento {
     @MaxLength(value = 2, type = 'z')
     private Integer refencia;
     @MaxLength(value = 13, type = 'z')
-    private Integer matricula;
+    private Long matricula;
     @MaxLength(value = 8, type = 'z')
     private Integer numeroContratoSolicitante;
     @MaxLength(value = 2, type = 'z')
@@ -32,11 +32,11 @@ public class Lancamento {
         this.refencia = refencia;
     }
 
-    public Integer getMatricula() {
+    public Long getMatricula() {
         return matricula;
     }
 
-    public void setMatricula(Integer matricula) {
+    public void setMatricula(Long matricula) {
         this.matricula = matricula;
     }
 

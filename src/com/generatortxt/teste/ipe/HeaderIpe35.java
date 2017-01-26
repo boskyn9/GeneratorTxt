@@ -5,10 +5,10 @@ import com.generatortxt.annotation.MaxLength;
 /**
  * Created by bosco on 03/01/2017.
  */
-public class Header {
+public class HeaderIpe35 {
 
     @MaxLength(value = 3, type = 's')
-    private String nomeDoSitema;
+    private String nomeDoSitema = "SMH";
     @MaxLength(value = 14, type = 'z')
     private Long cpfCnpjPrestador;
     @MaxLength(value = 4, type = 'z')
@@ -20,14 +20,10 @@ public class Header {
     @MaxLength(value = 45, type = 's')
     private String nomePrestador;
     @MaxLength(value = 2, type = 's')
-    private String filler;
+    private String filler = " ";
 
     public String getNomeDoSitema() {
         return nomeDoSitema;
-    }
-
-    public void setNomeDoSitema(String nomeDoSitema) {
-        this.nomeDoSitema = nomeDoSitema;
     }
 
     public Long getCpfCnpjPrestador() {
