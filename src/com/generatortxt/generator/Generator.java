@@ -31,12 +31,12 @@ public class Generator {
     public static char LF = (char) 0x0A;
     public static char EOF = (char) 0x1A;
     
-    private Object sped;
+    private Object obj;
     private StringBuilder spedString = new StringBuilder("");
     private TypeGenerator type;
     public String l, r;
     public List<Character> quebraLinha;
-    public char fimArquivo = ' ';
+    public Character fimArquivo;
 
     public Generator() {
         type = new DefaultType();
@@ -44,7 +44,7 @@ public class Generator {
         r = ((DefaultType) type).getRightSide();
     }
     
-    public Generator(char fimArquivo, Character... quebraLinha) {
+    public Generator(Character fimArquivo, Character... quebraLinha) {
         type = new DefaultType();
         l = ((DefaultType) type).getLeftSide();
         r = ((DefaultType) type).getRightSide();
@@ -60,14 +60,22 @@ public class Generator {
         }
     }
 
-    public String toTxt(Object sped) throws IllegalArgumentException, IllegalAccessException, MaxLengthException,
+    public String toTxt(Object obj) throws IllegalArgumentException, IllegalAccessException, MaxLengthException,
                                             ExactLengthException, ClassNotFoundException, NoSuchMethodException,
                                             InstantiationException, InvocationTargetException {
-        this.sped = sped;
-        Class txtClass = sped.getClass();
+        this.obj = obj;
+        Class txtClass = obj.getClass();
         Field fields[] = txtClass.getDeclaredFields();
-        gerarTxt(fields, sped);
-        return spedString.toString() + fimArquivo;
+        gerarTxt(fields, obj);
+        quebraLinhaAqui();
+        String retorno = "";
+        
+        if(fimArquivo != null)
+            retorno = spedString.append(fimArquivo).toString();
+        else
+            retorno = spedString.toString();
+        
+        return retorno;
     }
 
     public void generateAnottations(Field field, Object obj, int i) throws IllegalArgumentException,
@@ -187,30 +195,31 @@ public class Generator {
     }
 
     private void gerarTxt(Field[] fields, Object obj) throws IllegalArgumentException, IllegalAccessException, ExactLengthException, MaxLengthException, ClassNotFoundException, NoSuchMethodException, InstantiationException, InvocationTargetException {
-        boolean ql = false;               
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
             field.setAccessible(true);
 
             if (isList(field) || isNavegable(field.getType())) {
-
-                Class c = Class.forName(field.getType().getName());
-
-                if (c.isAssignableFrom(List.class)) {
+                
+                Class c = Class.forName(field.getType().getName());                
+                        
+                if (c.isAssignableFrom(List.class)) {                    
                     List list = (List) field.get(obj);
                     if (list != null) {
                         for (int j = 0; j < list.size(); j++) {
                             Object o = list.get(j);
                             Class listFieldClass = o.getClass();
-                            gerarTxt(listFieldClass.getDeclaredFields(), o);
+                            quebraLinhaAqui();
+                            gerarTxt(listFieldClass.getDeclaredFields(), o);                            
                         }
                     }
                 } else if (c.isAssignableFrom(Set.class)) {
-                    Set set = (Set) field.get(obj);
+                    Set set = (Set) field.get(obj);                    
                     if (set != null) {
                         for (Iterator it = set.iterator(); it.hasNext();) {
                             Object object = it.next();
                             Class setFieldClass = object.getClass();
+                            quebraLinhaAqui();
                             gerarTxt(setFieldClass.getDeclaredFields(), object);
                         }
                     }
@@ -220,22 +229,20 @@ public class Generator {
                 }
             } else {
                 generateAnottations(field, obj, i);
-                ql = true;
             }
         }
-        
-        if(ql){
-            if(quebraLinha !=null && quebraLinha.size() > 0){
+    }
+
+    private void quebraLinhaAqui(){
+        if(quebraLinha !=null && quebraLinha.size() > 0){
                 for (Character character : quebraLinha) {
                     spedString.append(character);
                 }
             }else{
                 spedString.append("\n");
             }
-        }
-            
     }
-
+    
     private Object zero(Object content, int max) {
         if(content==null)
             content = l;
